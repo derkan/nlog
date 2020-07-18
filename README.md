@@ -25,13 +25,9 @@
 
 ## Logging concept
 
-```mermaid
-graph LR
-    A[log] --> B((Formatter)) --> C(LeveledMutiWriter)
-    C --> D(LeveledWriter) -- sync --> E{Writer}
-    B --> F(LeveledMutiParallelWriter) --> G(LeveledParallelWriter)
-    G -- async --> E
-```
+![Colored Log](concept.png)
+
+
 
 - Writer is after formatter, so for `nlog` will not build format message for each writer. It will build format only once and use it in all writers assigned to it.
 - You can assign logging level for your formatter. If user log level is too detail, formatter will not format message and will not log it.

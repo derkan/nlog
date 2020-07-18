@@ -32,7 +32,7 @@
 - You can assign logging level for your formatter. If user log level is too detail, formatter will not format message and will not log it.
 - `nlog` Internally uses buffer pool for low allocation.
 
-## Bechkmarks
+## Benchmarks
 
 Some benchmark data
 

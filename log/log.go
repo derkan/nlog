@@ -81,5 +81,5 @@ func Println(msg ...interface{}) {
 
 // Sub returns a sub logger
 func Sub(prefix string) nlog.Logger {
-	return Logger.Sub(prefix)
+	return Logger.Sub(prefix).(nlog.Logger)
 }

@@ -68,7 +68,7 @@ type Logger interface {
 	// Print prints log at INFO level with given params
 	Println(args ...interface{})
 	// Sub returns a sub logger
-	Sub(prefix string) Logger
+	Sub(prefix string) interface{}
 }
 
 // LoggerItem is logger context

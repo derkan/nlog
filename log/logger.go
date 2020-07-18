@@ -197,7 +197,7 @@ func (ins *Instance) Println(args ...interface{}) {
 }
 
 // Sub returns a sub logger with given prefix
-func (ins *Instance) Sub(prefix string) nlog.Logger {
+func (ins *Instance) Sub(prefix string) interface{} {
 	return &Instance{
 		itemPool: ins.itemPool,
 		cfg: &config{

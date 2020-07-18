@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 	"github.com/derkan/nlog/formatter/console"
 	"github.com/derkan/nlog/formatter/json"
 	"github.com/derkan/nlog/loader"
@@ -23,7 +23,7 @@ func InitFromLoader(cfg *loader.Loader, appName string) {
 
 // New returns a new instance of standard logger
 func New(opts ...option) *Instance {
-	ins := &Instance{cfg: &config{MinLevel: common.DEBUG}}
+	ins := &Instance{cfg: &config{MinLevel: nlog.DEBUG}}
 	for _, opt := range opts {
 		opt(ins.cfg)
 	}
@@ -65,7 +65,7 @@ func (ins *Instance) SetDefaults() {
 	for i := range ins.cfg.formatters {
 		ins.cfg.formatters[i].Init()
 	}
-	ins.itemPool = pool.NewItemPool(4, common.DEBUG, ins.cfg.formatters...)
+	ins.itemPool = pool.NewItemPool(4, nlog.DEBUG, ins.cfg.formatters...)
 }
 
 // Flush flushes to disk and closes writers
@@ -76,128 +76,128 @@ func (ins *Instance) Flush() {
 }
 
 // Fatal returns FATAL level logger item
-func (ins *Instance) Fatal() common.LoggerItem {
-	if ins.cfg.MinLevel < common.FATAL {
+func (ins *Instance) Fatal() nlog.LoggerItem {
+	if ins.cfg.MinLevel < nlog.FATAL {
 		return pool.NullItem
 	}
-	return ins.itemPool.Get(common.FATAL, ins.cfg.Prefix, 0)
+	return ins.itemPool.Get(nlog.FATAL, ins.cfg.Prefix, 0)
 }
 
 // Fatalf logs FATAL level log with given format-params and exits
 func (ins *Instance) Fatalf(format string, args ...interface{}) {
-	if ins.cfg.MinLevel < common.FATAL {
+	if ins.cfg.MinLevel < nlog.FATAL {
 		return
 	}
 	for i := range ins.cfg.formatters {
-		ins.cfg.formatters[i].Logf(ins.cfg.formatters[i].GetCallDepth(ins.cfg.SubDepth), common.FATAL, nil, ins.cfg.Prefix, format, args...)
+		ins.cfg.formatters[i].Logf(ins.cfg.formatters[i].GetCallDepth(ins.cfg.SubDepth), nlog.FATAL, nil, ins.cfg.Prefix, format, args...)
 	}
 }
 
 // Error returns ERROR level logger item
-func (ins *Instance) Error() common.LoggerItem {
-	if ins.cfg.MinLevel < common.ERROR {
+func (ins *Instance) Error() nlog.LoggerItem {
+	if ins.cfg.MinLevel < nlog.ERROR {
 		return pool.NullItem
 	}
-	return ins.itemPool.Get(common.ERROR, ins.cfg.Prefix, 0)
+	return ins.itemPool.Get(nlog.ERROR, ins.cfg.Prefix, 0)
 }
 
 // Errorf logs ERROR level log with given format-params
 func (ins *Instance) Errorf(format string, args ...interface{}) {
-	if ins.cfg.MinLevel < common.ERROR {
+	if ins.cfg.MinLevel < nlog.ERROR {
 		return
 	}
 	for i := range ins.cfg.formatters {
-		ins.cfg.formatters[i].Logf(ins.cfg.formatters[i].GetCallDepth(ins.cfg.SubDepth), common.ERROR, nil, ins.cfg.Prefix, format, args...)
+		ins.cfg.formatters[i].Logf(ins.cfg.formatters[i].GetCallDepth(ins.cfg.SubDepth), nlog.ERROR, nil, ins.cfg.Prefix, format, args...)
 	}
 }
 
 // Warn returns WARNING level logger item
-func (ins *Instance) Warn() common.LoggerItem {
-	if ins.cfg.MinLevel < common.WARNING {
+func (ins *Instance) Warn() nlog.LoggerItem {
+	if ins.cfg.MinLevel < nlog.WARNING {
 		return pool.NullItem
 	}
-	return ins.itemPool.Get(common.WARNING, ins.cfg.Prefix, 0)
+	return ins.itemPool.Get(nlog.WARNING, ins.cfg.Prefix, 0)
 }
 
 // Warnf logs WARN level log with given format-params
 func (ins *Instance) Warnf(format string, args ...interface{}) {
-	if ins.cfg.MinLevel < common.WARNING {
+	if ins.cfg.MinLevel < nlog.WARNING {
 		return
 	}
 	for i := range ins.cfg.formatters {
-		ins.cfg.formatters[i].Logf(ins.cfg.formatters[i].GetCallDepth(ins.cfg.SubDepth), common.WARNING, nil, ins.cfg.Prefix, format, args...)
+		ins.cfg.formatters[i].Logf(ins.cfg.formatters[i].GetCallDepth(ins.cfg.SubDepth), nlog.WARNING, nil, ins.cfg.Prefix, format, args...)
 	}
 }
 
 // Info logs info message if logging level is satisfied
-func (ins *Instance) Info() common.LoggerItem {
-	if ins.cfg.MinLevel < common.INFO {
+func (ins *Instance) Info() nlog.LoggerItem {
+	if ins.cfg.MinLevel < nlog.INFO {
 		return pool.NullItem
 	}
-	return ins.itemPool.Get(common.INFO, ins.cfg.Prefix, 0)
+	return ins.itemPool.Get(nlog.INFO, ins.cfg.Prefix, 0)
 }
 
 // Infof logs info message with format if logging level is satisfied
 func (ins *Instance) Infof(format string, args ...interface{}) {
 
-	if ins.cfg.MinLevel < common.INFO {
+	if ins.cfg.MinLevel < nlog.INFO {
 		return
 	}
 	for i := range ins.cfg.formatters {
-		ins.cfg.formatters[i].Logf(ins.cfg.formatters[i].GetCallDepth(ins.cfg.SubDepth), common.INFO, nil, ins.cfg.Prefix, format, args...)
+		ins.cfg.formatters[i].Logf(ins.cfg.formatters[i].GetCallDepth(ins.cfg.SubDepth), nlog.INFO, nil, ins.cfg.Prefix, format, args...)
 	}
 }
 
 // Debug returns DEBUG level logger item
-func (ins *Instance) Debug() common.LoggerItem {
-	if ins.cfg.MinLevel < common.DEBUG {
+func (ins *Instance) Debug() nlog.LoggerItem {
+	if ins.cfg.MinLevel < nlog.DEBUG {
 		return pool.NullItem
 	}
-	return ins.itemPool.Get(common.DEBUG, ins.cfg.Prefix, 0)
+	return ins.itemPool.Get(nlog.DEBUG, ins.cfg.Prefix, 0)
 }
 
 // Debugf prints DEBUG level message with given format-params
 func (ins *Instance) Debugf(format string, args ...interface{}) {
-	if ins.cfg.MinLevel < common.DEBUG {
+	if ins.cfg.MinLevel < nlog.DEBUG {
 		return
 	}
 	for i := range ins.cfg.formatters {
-		ins.cfg.formatters[i].Logf(0, common.DEBUG, nil, ins.cfg.Prefix, format, args...)
+		ins.cfg.formatters[i].Logf(0, nlog.DEBUG, nil, ins.cfg.Prefix, format, args...)
 	}
 }
 
 // Print prints log at INFO level with given params
 func (ins *Instance) Print(args ...interface{}) {
-	if ins.cfg.MinLevel < common.DEBUG {
+	if ins.cfg.MinLevel < nlog.DEBUG {
 		return
 	}
 	for i := range ins.cfg.formatters {
-		ins.cfg.formatters[i].Logf(0, common.DEBUG, nil, ins.cfg.Prefix, "", args...)
+		ins.cfg.formatters[i].Logf(0, nlog.DEBUG, nil, ins.cfg.Prefix, "", args...)
 	}
 }
 
 // Printf prints log at INFO level with given format-params
 func (ins *Instance) Printf(format string, args ...interface{}) {
-	if ins.cfg.MinLevel < common.DEBUG {
+	if ins.cfg.MinLevel < nlog.DEBUG {
 		return
 	}
 	for i := range ins.cfg.formatters {
-		ins.cfg.formatters[i].Logf(0, common.DEBUG, nil, ins.cfg.Prefix, format, args...)
+		ins.cfg.formatters[i].Logf(0, nlog.DEBUG, nil, ins.cfg.Prefix, format, args...)
 	}
 }
 
 // Print prints log at INFO level with given params
 func (ins *Instance) Println(args ...interface{}) {
-	if ins.cfg.MinLevel < common.DEBUG {
+	if ins.cfg.MinLevel < nlog.DEBUG {
 		return
 	}
 	for i := range ins.cfg.formatters {
-		ins.cfg.formatters[i].Logf(0, common.DEBUG, nil, ins.cfg.Prefix, "", args...)
+		ins.cfg.formatters[i].Logf(0, nlog.DEBUG, nil, ins.cfg.Prefix, "", args...)
 	}
 }
 
 // Sub returns a sub logger with given prefix and optionally min logging level
-func (ins *Instance) Sub(prefix string, minLevel ...common.Level) Logger {
+func (ins *Instance) Sub(prefix string, minLevel ...nlog.Level) Logger {
 	lvl := ins.cfg.MinLevel
 	if len(minLevel) > 0 {
 		lvl = minLevel[0]

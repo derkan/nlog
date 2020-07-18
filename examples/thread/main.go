@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 	"github.com/derkan/nlog/formatter/console"
 	"github.com/derkan/nlog/formatter/json"
 	"github.com/derkan/nlog/log"
@@ -17,7 +17,7 @@ import (
 func main() {
 	log.Init(
 		log.WithPrefix("main"),
-		log.WithMinLevel(common.DEBUG),
+		log.WithMinLevel(nlog.DEBUG),
 		log.WithFormatter(
 			console.NewFormatter(
 				console.WithColor(),
@@ -25,7 +25,7 @@ func main() {
 				console.WithTime(time.Millisecond),
 				console.WithFileLoc(),
 				console.WithStripPath("/data/go/src"),
-				console.WithLevel(common.DEBUG),
+				console.WithLevel(nlog.DEBUG),
 			),
 		), log.WithFormatter(
 			json.NewFormatter(
@@ -39,7 +39,7 @@ func main() {
 					), 100),
 			)), log.WithFormatter(
 			console.NewFormatter(
-				console.WithParallelWriter(writer.NewSysLogWriter("MYAPP"), 100, common.DEBUG),
+				console.WithParallelWriter(writer.NewSysLogWriter("MYAPP"), 100, nlog.DEBUG),
 			),
 		))
 	log.Infof("starting")

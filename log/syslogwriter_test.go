@@ -7,7 +7,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/derkan/nlog/common"
 	"github.com/derkan/nlog/formatter/json"
 	"github.com/derkan/nlog/writer"
 )
@@ -24,7 +23,7 @@ func (w *syslogTestWriter) Write(p []byte) (int, error) {
 	return 0, nil
 }
 
-func (w *syslogTestWriter) WriteIfLevel(p []byte, l common.Level) (int, error) {
+func (w *syslogTestWriter) WriteIfLevel(p []byte, l nlog.Level) (int, error) {
 	return 0, nil
 }
 
@@ -61,10 +60,10 @@ func (w *syslogTestWriter) Crit(m string) error {
 func TestSyslogWriter(t *testing.T) {
 	sw := &syslogTestWriter{}
 	log := New(
-		WithMinLevel(common.DEBUG),
+		WithMinLevel(nlog.DEBUG),
 		WithFormatter(
 			json.NewFormatter(
-				json.WithWriter(writer.SysLogWrapper(sw, common.DEBUG), common.DEBUG),
+				json.WithWriter(writer.SysLogWrapper(sw, nlog.DEBUG), nlog.DEBUG),
 			),
 		),
 	)

@@ -1,6 +1,6 @@
 package writer
 
-import "github.com/derkan/nlog/common"
+import "github.com/derkan/nlog"
 
 // DummyLeveledWriter is a wrapper around an actual writer
 // Do not do anything
@@ -18,13 +18,13 @@ func (l *DummyLeveledWriter) Write(p []byte) (n int, err error) {
 }
 
 // WriteIfLevel writes mesage if level is satisfied
-func (l *DummyLeveledWriter) WriteIfLevel(lvl common.Level, p []byte) (n int, err error) {
+func (l *DummyLeveledWriter) WriteIfLevel(lvl nlog.Level, p []byte) (n int, err error) {
 	return
 }
 
 // GetLevel returns log level
-func (l *DummyLeveledWriter) GetLevel() common.Level {
-	return common.FATAL
+func (l *DummyLeveledWriter) GetLevel() nlog.Level {
+	return nlog.FATAL
 }
 
 // NewDummyLeveledWriter returns a new instance of DummyLeveledWriter

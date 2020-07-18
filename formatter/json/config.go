@@ -8,14 +8,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 	"github.com/derkan/nlog/writer"
 )
 
 // config is for logger settings
 type config struct {
 	// Level is logging level
-	Level common.Level `json:"level" yaml:"level"`
+	Level nlog.Level `json:"level" yaml:"level"`
 	// NoPrintLevel if set level string will not be written
 	NoPrintLevel bool `json:"no_print_level" yaml:"print_level"`
 	// Date sets whether to print date or not in layout 2006-01-02
@@ -37,9 +37,9 @@ type config struct {
 	// Writer is writer to write log into
 	Writer writer.LeveledMultiWriter
 	// Hooks hold hook structs to be called during logging
-	Hooks []common.Hook
+	Hooks []nlog.Hook
 	// MarshallFn func is used to serialize interfaces
-	MarshallFn common.MarshallFn
+	MarshallFn nlog.MarshallFn
 }
 
 // option is function type used for setting console logging config attributes
@@ -47,14 +47,14 @@ type option func(*config)
 
 // WithMarshallFn adds marshalling with specified func
 // default is json.Marshall
-func WithMarshallFn(fn common.MarshallFn) option {
+func WithMarshallFn(fn nlog.MarshallFn) option {
 	return func(c *config) {
 		c.MarshallFn = fn
 	}
 }
 
 // WithHook adds hooks to be called during logging
-func WithHook(h common.Hook) option {
+func WithHook(h nlog.Hook) option {
 	return func(c *config) {
 		c.Hooks = append(c.Hooks, h)
 	}
@@ -62,11 +62,11 @@ func WithHook(h common.Hook) option {
 
 // WithWriter sets the Writer for console
 // Can be called mutliple times to add new writers
-func WithWriter(w io.WriteCloser, lvl ...common.Level) option {
+func WithWriter(w io.WriteCloser, lvl ...nlog.Level) option {
 	return func(c *config) {
 		var wl *writer.Writer
 		if len(lvl) == 0 {
-			wl = writer.NewWriter(w, common.INFO)
+			wl = writer.NewWriter(w, nlog.INFO)
 		} else {
 			wl = writer.NewWriter(w, lvl[0])
 		}
@@ -81,11 +81,11 @@ func WithWriter(w io.WriteCloser, lvl ...common.Level) option {
 // WithParallelWriter sets the Writer for console
 // Can be called mutliple times to add new writers
 // Overrides if called after WithWriter
-func WithParallelWriter(w io.WriteCloser, chanSize int, lvl ...common.Level) option {
+func WithParallelWriter(w io.WriteCloser, chanSize int, lvl ...nlog.Level) option {
 	return func(c *config) {
 		var wl *writer.ParallelWriter
 		if len(lvl) == 0 {
-			wl = writer.NewParellelWriter(w, common.INFO, chanSize)
+			wl = writer.NewParellelWriter(w, nlog.INFO, chanSize)
 		} else {
 			wl = writer.NewParellelWriter(w, lvl[0], chanSize)
 		}
@@ -98,7 +98,7 @@ func WithParallelWriter(w io.WriteCloser, chanSize int, lvl ...common.Level) opt
 }
 
 // WithLevel sets level of logger
-func WithLevel(level common.Level) option {
+func WithLevel(level nlog.Level) option {
 	return func(c *config) {
 		c.Level = level
 	}
@@ -180,7 +180,7 @@ func WithFileLoc(CallerDepth ...int) option {
 }
 
 // GetTime formats time
-func (c *config) GetTime(buf common.Buffer, quota bool) {
+func (c *config) GetTime(buf nlog.Buffer, quota bool) {
 	if !c.Date && !c.Time && !c.UnixTime {
 		return
 	}

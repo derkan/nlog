@@ -5,13 +5,13 @@ import (
 	"io"
 	"sync"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 )
 
 // LeveledWriter is a wrapper around an actual writer. Not threadsafe
 type LeveledMultiWriter interface {
 	io.WriteCloser
-	WriteIfLevel(lvl common.Level, p []byte) (n int, err error)
+	WriteIfLevel(lvl nlog.Level, p []byte) (n int, err error)
 	Remove(writers ...LeveledWriter)
 	Append(writers ...LeveledWriter)
 }
@@ -73,7 +73,7 @@ func (t *MultiWriter) Close() (err error) {
 }
 
 // WriteIfLevel calls write if current le₺vel is satisfied
-func (t *MultiWriter) WriteIfLevel(lvl common.Level, p []byte) (n int, err error) {
+func (t *MultiWriter) WriteIfLevel(lvl nlog.Level, p []byte) (n int, err error) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 

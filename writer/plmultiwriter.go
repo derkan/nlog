@@ -5,7 +5,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 	"github.com/derkan/nlog/pool"
 )
 
@@ -70,7 +70,7 @@ func (t *ParallelMultiWriter) Close() (err error) {
 }
 
 // WriteIfLevel calls write if current le₺vel is satisfied
-func (t *ParallelMultiWriter) WriteIfLevel(lvl common.Level, p []byte) (n int, err error) {
+func (t *ParallelMultiWriter) WriteIfLevel(lvl nlog.Level, p []byte) (n int, err error) {
 	t.mu.RLock()
 	defer t.mu.RUnlock()
 	for _, w := range t.writers {

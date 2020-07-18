@@ -3,25 +3,25 @@ package loader
 import (
 	"time"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 )
 
-var LevelCodes = map[string]common.Level{
-	common.FatalStr: common.FATAL,
-	"FATAL":         common.FATAL,
-	"fatal":         common.FATAL,
-	common.ErrorStr: common.ERROR,
-	"ERROR":         common.ERROR,
-	"error":         common.ERROR,
-	common.WarnStr:  common.WARNING,
-	"WARNING":       common.WARNING,
-	"warning":       common.WARNING,
-	common.InfoStr:  common.INFO,
-	"INFO":          common.INFO,
-	"info":          common.INFO,
-	common.DebugStr: common.DEBUG,
-	"DEBUG":         common.DEBUG,
-	"debug":         common.DEBUG,
+var LevelCodes = map[string]nlog.Level{
+	nlog.FatalStr: nlog.FATAL,
+	"FATAL":       nlog.FATAL,
+	"fatal":       nlog.FATAL,
+	nlog.ErrorStr: nlog.ERROR,
+	"ERROR":       nlog.ERROR,
+	"error":       nlog.ERROR,
+	nlog.WarnStr:  nlog.WARNING,
+	"WARNING":     nlog.WARNING,
+	"warning":     nlog.WARNING,
+	nlog.InfoStr:  nlog.INFO,
+	"INFO":        nlog.INFO,
+	"info":        nlog.INFO,
+	nlog.DebugStr: nlog.DEBUG,
+	"DEBUG":       nlog.DEBUG,
+	"debug":       nlog.DEBUG,
 }
 
 var FormatterTypes = []string{"console", "json"}
@@ -71,7 +71,7 @@ type Writer struct {
 	QueueLen int `json:"queue_len" yaml:"queue_len"`
 	// Level is logging level
 	LevelStr string `json:"level" yaml:"level"`
-	Level    common.Level
+	Level    nlog.Level
 }
 
 // Formatter holds common formatter configs
@@ -81,7 +81,7 @@ type Formatter struct {
 	Type    string
 	// Level is logging level
 	LevelStr string `json:"level" yaml:"level"`
-	Level    common.Level
+	Level    nlog.Level
 	// Colored determines whether to print in color only valid for console
 	Colored bool `json:"colored" yaml:"colored"`
 	// NoPrintLevel if set level string will not be written
@@ -117,12 +117,12 @@ type Loader struct {
 	Prefix string `json:"prefix" yaml:"prefix"`
 	// MinLevel is minimal level of logging
 	MinLevelStr string `json:"min_level" yaml:"min_level"`
-	MinLevel    common.Level
+	MinLevel    nlog.Level
 	// Formatters holds formatters
 	Formatters []Formatter `json:"console_formatters" yaml:"console_formatters"`
 }
 
-func AsLevel(levelStr string, defaultValue common.Level) common.Level {
+func AsLevel(levelStr string, defaultValue nlog.Level) nlog.Level {
 	if lvl, ok := LevelCodes[levelStr]; ok {
 		return lvl
 	}
@@ -193,7 +193,7 @@ func fromCfg(config *File, baseKey string) *Loader {
 	l := new(Loader)
 	l.Prefix, _ = config.Get(baseKey + "prefix")
 	l.MinLevelStr, _ = config.Get(baseKey + "min_level")
-	l.MinLevel = AsLevel(l.MinLevelStr, common.INFO)
+	l.MinLevel = AsLevel(l.MinLevelStr, nlog.INFO)
 	fmtCnt, _ := config.Count(baseKey + "formatters")
 	if fmtCnt > 0 {
 		l.Formatters = make([]Formatter, fmtCnt)

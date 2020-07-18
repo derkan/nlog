@@ -1,7 +1,7 @@
 package log
 
 import (
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 	"github.com/derkan/nlog/pool"
 )
 
@@ -10,8 +10,8 @@ type config struct {
 	// Prefix is logger prefix, this prefix is printed before message on each line
 	Prefix string
 	// MinLevel is minimum log level permitted for writers to write
-	MinLevel   common.Level
-	formatters []common.Formatter
+	MinLevel   nlog.Level
+	formatters []nlog.Formatter
 	SubDepth   int
 }
 
@@ -35,14 +35,14 @@ func WithPrefix(Prefix string) option {
 }
 
 // WithMinLevel sets minimal level of logger
-func WithMinLevel(level common.Level) option {
+func WithMinLevel(level nlog.Level) option {
 	return func(c *config) {
 		c.MinLevel = level
 	}
 }
 
 // WithFormatter adds formatter to  logger
-func WithFormatter(formatter common.Formatter) option {
+func WithFormatter(formatter nlog.Formatter) option {
 	return func(c *config) {
 		c.formatters = append(c.formatters, formatter)
 	}

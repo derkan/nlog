@@ -7,7 +7,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 )
 
 const (
@@ -43,7 +43,7 @@ var defaultPool Pool
 // Got byte buffer may be returned to the pool via Put call.
 // This reduces the number of memory allocations required for byte buffer
 // management.
-func GetBuffer() common.Buffer {
+func GetBuffer() nlog.Buffer {
 	return defaultPool.Get()
 }
 
@@ -51,12 +51,12 @@ func GetBuffer() common.Buffer {
 //
 // The byte buffer may be returned to the pool via Put after the use
 // in order to minimize GC overhead.
-func (p *Pool) Get() common.Buffer {
+func (p *Pool) Get() nlog.Buffer {
 	v := p.pool.Get()
 	if v != nil {
-		return v.(common.Buffer)
+		return v.(nlog.Buffer)
 	}
-	var res common.Buffer
+	var res nlog.Buffer
 	res = &Buffer{
 		B: make([]byte, 0, atomic.LoadUint64(&p.defaultSize)),
 	}
@@ -67,12 +67,12 @@ func (p *Pool) Get() common.Buffer {
 //
 // Buffer.B mustn't be touched after returning it to the pool.
 // Otherwise data races will occur.
-func PutBuffer(b common.Buffer) { defaultPool.Put(b) }
+func PutBuffer(b nlog.Buffer) { defaultPool.Put(b) }
 
 // Put releases byte buffer obtained via Get to the pool.
 //
 // The buffer mustn't be accessed after returning to the pool.
-func (p *Pool) Put(b common.Buffer) {
+func (p *Pool) Put(b nlog.Buffer) {
 	idx := index(b.Len())
 
 	if atomic.AddUint64(&p.calls[idx], 1) > calibrateCallsThreshold {

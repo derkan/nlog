@@ -1,4 +1,4 @@
-package common
+package nlog
 
 // Level defines all available log levels for log messages.
 type Level int

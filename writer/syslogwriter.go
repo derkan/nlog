@@ -8,7 +8,7 @@ import (
 	"log/syslog"
 	"os"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 )
 
 // SyslogWriter is an interface matching a syslog.Writer struct.
@@ -24,20 +24,20 @@ type SyslogWriter interface {
 
 type syslogWriter struct {
 	w SyslogWriter
-	l common.Level
+	l nlog.Level
 }
 
-var logMap = map[common.Level]syslog.Priority{
-	common.FATAL:   syslog.LOG_CRIT,
-	common.ERROR:   syslog.LOG_ERR,
-	common.WARNING: syslog.LOG_WARNING,
-	common.INFO:    syslog.LOG_INFO,
-	common.DEBUG:   syslog.LOG_DEBUG,
+var logMap = map[nlog.Level]syslog.Priority{
+	nlog.FATAL:   syslog.LOG_CRIT,
+	nlog.ERROR:   syslog.LOG_ERR,
+	nlog.WARNING: syslog.LOG_WARNING,
+	nlog.INFO:    syslog.LOG_INFO,
+	nlog.DEBUG:   syslog.LOG_DEBUG,
 }
 
 // SyslogLevelWriter wraps a SyslogWriter and call the right syslog level
 // method matching the level.
-func SysLogWrapper(w SyslogWriter, l common.Level) LeveledWriter {
+func SysLogWrapper(w SyslogWriter, l nlog.Level) LeveledWriter {
 	return syslogWriter{w, l}
 }
 
@@ -51,12 +51,12 @@ func (l syslogWriter) Close() (err error) {
 }
 
 // GetLevel returns log level of current writer
-func (l syslogWriter) GetLevel() common.Level {
+func (l syslogWriter) GetLevel() nlog.Level {
 	return l.l
 }
 
 // WriteLevel implements LevelWriter interface.
-func (sw syslogWriter) WriteIfLevel(lvl common.Level, p []byte) (n int, err error) {
+func (sw syslogWriter) WriteIfLevel(lvl nlog.Level, p []byte) (n int, err error) {
 	if lvl > sw.l {
 		if p == nil {
 			return 0, nil
@@ -64,15 +64,15 @@ func (sw syslogWriter) WriteIfLevel(lvl common.Level, p []byte) (n int, err erro
 		return len(p), nil
 	}
 	switch lvl {
-	case common.DEBUG:
+	case nlog.DEBUG:
 		err = sw.w.Debug(string(p))
-	case common.INFO:
+	case nlog.INFO:
 		err = sw.w.Info(string(p))
-	case common.WARNING:
+	case nlog.WARNING:
 		err = sw.w.Warning(string(p))
-	case common.ERROR:
+	case nlog.ERROR:
 		err = sw.w.Err(string(p))
-	case common.FATAL:
+	case nlog.FATAL:
 		err = sw.w.Crit(string(p))
 	default:
 		err = sw.w.Warning(string(p))
@@ -82,8 +82,8 @@ func (sw syslogWriter) WriteIfLevel(lvl common.Level, p []byte) (n int, err erro
 }
 
 // NewSysLogWriter initializes a syslog writer wrapped in LeveledLogger
-func NewSysLogWriter(name string, l ...common.Level) LeveledWriter {
-	lvl := common.DEBUG
+func NewSysLogWriter(name string, l ...nlog.Level) LeveledWriter {
+	lvl := nlog.DEBUG
 	if len(l) > 0 {
 		lvl = l[0]
 	}

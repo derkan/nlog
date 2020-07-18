@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 	"github.com/derkan/nlog/pool"
 )
 
@@ -14,8 +14,8 @@ import (
 // Not concurrent safe
 type ParallelWriter struct {
 	w   io.WriteCloser
-	l   common.Level
-	ch  chan common.Buffer
+	l   nlog.Level
+	ch  chan nlog.Buffer
 	end chan bool
 }
 
@@ -30,12 +30,12 @@ func (l *ParallelWriter) Close() (err error) {
 }
 
 // GetLevel returns log level of current writer
-func (l *ParallelWriter) GetLevel() common.Level {
+func (l *ParallelWriter) GetLevel() nlog.Level {
 	return l.l
 }
 
 // WriteIfLevel calls write if current le₺vel is satisfied
-func (l *ParallelWriter) WriteIfLevel(lvl common.Level, p []byte) (n int, err error) {
+func (l *ParallelWriter) WriteIfLevel(lvl nlog.Level, p []byte) (n int, err error) {
 	if lvl > l.l {
 		if p == nil {
 			return 0, nil
@@ -83,11 +83,11 @@ func (l *ParallelWriter) Stop() {
 
 // NewParellelWriter returns a new instance of threadsafe writer which will
 // write when level is satisfied
-func NewParellelWriter(w io.WriteCloser, l common.Level, chanSize int) *ParallelWriter {
+func NewParellelWriter(w io.WriteCloser, l nlog.Level, chanSize int) *ParallelWriter {
 	return &ParallelWriter{
 		w:   w,
 		l:   l,
-		ch:  make(chan common.Buffer, chanSize),
+		ch:  make(chan nlog.Buffer, chanSize),
 		end: make(chan bool),
 	}
 }

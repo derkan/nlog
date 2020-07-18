@@ -6,7 +6,7 @@ import (
 
 	"strconv"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 )
 
 // Buffer provides byte buffer, which can be used for minimizing
@@ -124,19 +124,19 @@ func (b *Buffer) Itoa(i int, wid int) {
 }
 
 // AppendByte writes a single byte to the Buffer.
-func (b *Buffer) AppendByte(v byte) common.Buffer {
+func (b *Buffer) AppendByte(v byte) nlog.Buffer {
 	b.B = append(b.B, v)
 	return b
 }
 
 // AppendBytes writes a slice of byte to the Buffer.
-func (b *Buffer) AppendBytes(v []byte) common.Buffer {
+func (b *Buffer) AppendBytes(v []byte) nlog.Buffer {
 	b.B = append(b.B, v...)
 	return b
 }
 
 // AppendString writes a string to the Buffer.
-func (b *Buffer) AppendString(v string, quota bool) common.Buffer {
+func (b *Buffer) AppendString(v string, quota bool) nlog.Buffer {
 	if quota {
 		b.B = append(b.B, '"')
 	}
@@ -148,7 +148,7 @@ func (b *Buffer) AppendString(v string, quota bool) common.Buffer {
 }
 
 // AppendStrings writes a slice of string to the Buffer.
-func (b *Buffer) AppendStrings(v []string, quota bool) common.Buffer {
+func (b *Buffer) AppendStrings(v []string, quota bool) nlog.Buffer {
 	if len(v) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -167,13 +167,13 @@ func (b *Buffer) AppendStrings(v []string, quota bool) common.Buffer {
 }
 
 // AppendInt appends an integer to the underlying buffer (assuming base 10).
-func (b *Buffer) AppendInt(val int) common.Buffer {
+func (b *Buffer) AppendInt(val int) nlog.Buffer {
 	b.B = strconv.AppendInt(b.B, int64(val), 10)
 	return b
 }
 
 // AppendInts appends a slice of integer to the underlying buffer
-func (b *Buffer) AppendInts(val []int) common.Buffer {
+func (b *Buffer) AppendInts(val []int) nlog.Buffer {
 	if len(val) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -190,7 +190,7 @@ func (b *Buffer) AppendInts(val []int) common.Buffer {
 }
 
 // AppendInts8 appends a slice of int8 to the underlying buffer
-func (b *Buffer) AppendInts8(val []int8) common.Buffer {
+func (b *Buffer) AppendInts8(val []int8) nlog.Buffer {
 	if len(val) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -207,7 +207,7 @@ func (b *Buffer) AppendInts8(val []int8) common.Buffer {
 }
 
 // AppendInts16 appends a slice of int16 to the underlying buffer
-func (b *Buffer) AppendInts16(val []int16) common.Buffer {
+func (b *Buffer) AppendInts16(val []int16) nlog.Buffer {
 	if len(val) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -224,7 +224,7 @@ func (b *Buffer) AppendInts16(val []int16) common.Buffer {
 }
 
 // AppendInts32 appends a slice of int32 to the underlying buffer
-func (b *Buffer) AppendInts32(val []int32) common.Buffer {
+func (b *Buffer) AppendInts32(val []int32) nlog.Buffer {
 	if len(val) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -241,13 +241,13 @@ func (b *Buffer) AppendInts32(val []int32) common.Buffer {
 }
 
 // AppendInt64 appends an int64 to the underlying buffer (assuming base 10).
-func (b *Buffer) AppendInt64(i int64) common.Buffer {
+func (b *Buffer) AppendInt64(i int64) nlog.Buffer {
 	b.B = strconv.AppendInt(b.B, i, 10)
 	return b
 }
 
 // AppendInts64 appends a slice of int64 to the underlying buffer (assuming base 10).
-func (b *Buffer) AppendInts64(val []int64) common.Buffer {
+func (b *Buffer) AppendInts64(val []int64) nlog.Buffer {
 	if len(val) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -264,7 +264,7 @@ func (b *Buffer) AppendInts64(val []int64) common.Buffer {
 }
 
 // AppendUInts appends a slice of uint to the underlying buffer (assuming base 10).
-func (b *Buffer) AppendUInts(val []uint) common.Buffer {
+func (b *Buffer) AppendUInts(val []uint) nlog.Buffer {
 	if len(val) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -281,7 +281,7 @@ func (b *Buffer) AppendUInts(val []uint) common.Buffer {
 }
 
 // AppendUInts16 appends a slice of uint16 to the underlying buffer (assuming base 10).
-func (b *Buffer) AppendUInts16(val []uint16) common.Buffer {
+func (b *Buffer) AppendUInts16(val []uint16) nlog.Buffer {
 	if len(val) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -298,7 +298,7 @@ func (b *Buffer) AppendUInts16(val []uint16) common.Buffer {
 }
 
 // AppendUInts32 appends a slice of uint32 to the underlying buffer (assuming base 10).
-func (b *Buffer) AppendUInts32(val []uint32) common.Buffer {
+func (b *Buffer) AppendUInts32(val []uint32) nlog.Buffer {
 	if len(val) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -315,13 +315,13 @@ func (b *Buffer) AppendUInts32(val []uint32) common.Buffer {
 }
 
 // AppendUInt64 appends an uint64 to the underlying buffer (assuming base 10).
-func (b *Buffer) AppendUInt64(val uint64) common.Buffer {
+func (b *Buffer) AppendUInt64(val uint64) nlog.Buffer {
 	b.B = strconv.AppendUint(b.B, uint64(val), 10)
 	return b
 }
 
 // AppendUInts64 appends a slice of uint64 to the underlying buffer (assuming base 10).
-func (b *Buffer) AppendUInts64(val []uint64) common.Buffer {
+func (b *Buffer) AppendUInts64(val []uint64) nlog.Buffer {
 	if len(val) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -338,13 +338,13 @@ func (b *Buffer) AppendUInts64(val []uint64) common.Buffer {
 }
 
 // AppendBool appends a bool to the underlying buffer.
-func (b *Buffer) AppendBool(v bool) common.Buffer {
+func (b *Buffer) AppendBool(v bool) nlog.Buffer {
 	b.B = strconv.AppendBool(b.B, v)
 	return b
 }
 
 // AppendBools appends a slice bool to the underlying buffer.
-func (b *Buffer) AppendBools(v []bool) common.Buffer {
+func (b *Buffer) AppendBools(v []bool) nlog.Buffer {
 	for _, x := range v {
 		b.B = strconv.AppendBool(append(b.B, ','), x)
 	}
@@ -352,12 +352,12 @@ func (b *Buffer) AppendBools(v []bool) common.Buffer {
 }
 
 // AppendError writes error to buffer
-func (b *Buffer) AppendError(val error, quota bool) common.Buffer {
+func (b *Buffer) AppendError(val error, quota bool) nlog.Buffer {
 	return b.AppendString(val.Error(), quota)
 }
 
 // AppendErrors writes a slice of string to the Buffer.
-func (b *Buffer) AppendErrors(val []error, quota bool) common.Buffer {
+func (b *Buffer) AppendErrors(val []error, quota bool) nlog.Buffer {
 	if len(val) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -387,13 +387,13 @@ func (b *Buffer) AppendErrors(val []error, quota bool) common.Buffer {
 }
 
 // AppendFloat32 appends an float32 to the underlying buffer
-func (b *Buffer) AppendFloat32(val float32) common.Buffer {
+func (b *Buffer) AppendFloat32(val float32) nlog.Buffer {
 	b.B = strconv.AppendFloat(b.B, float64(val), 'f', -1, 32)
 	return b
 }
 
 // AppendFloats32 appends a slice of float32 to the underlying buffer
-func (b *Buffer) AppendFloats32(vals []float32) common.Buffer {
+func (b *Buffer) AppendFloats32(vals []float32) nlog.Buffer {
 	if len(vals) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -410,13 +410,13 @@ func (b *Buffer) AppendFloats32(vals []float32) common.Buffer {
 }
 
 // AppendFloat64 appends an float64 to the underlying buffer
-func (b *Buffer) AppendFloat64(val float64) common.Buffer {
+func (b *Buffer) AppendFloat64(val float64) nlog.Buffer {
 	b.B = strconv.AppendFloat(b.B, val, 'f', -1, 64)
 	return b
 }
 
 // AppendFloats64 appends a slice of float64 to the underlying buffer
-func (b *Buffer) AppendFloats64(vals []float64) common.Buffer {
+func (b *Buffer) AppendFloats64(vals []float64) nlog.Buffer {
 	if len(vals) == 0 {
 		b.B = append(b.B, '[', ']')
 		return b
@@ -433,7 +433,7 @@ func (b *Buffer) AppendFloats64(vals []float64) common.Buffer {
 }
 
 // AppendInterface takes an arbitrary object and converts it to JSON and embeds it dst.
-func (b *Buffer) AppendInterface(val interface{}, marshallFn common.MarshallFn) common.Buffer {
+func (b *Buffer) AppendInterface(val interface{}, marshallFn nlog.MarshallFn) nlog.Buffer {
 	res, err := marshallFn(val)
 	if err != nil {
 		return b.AppendString(fmt.Sprintf("marshaling error: %v", err), true)
@@ -442,7 +442,7 @@ func (b *Buffer) AppendInterface(val interface{}, marshallFn common.MarshallFn) 
 }
 
 // AppendAny appends given interface with its type
-func (b *Buffer) AppendAny(val interface{}, quota bool, marshallFn common.MarshallFn) common.Buffer {
+func (b *Buffer) AppendAny(val interface{}, quota bool, marshallFn nlog.MarshallFn) nlog.Buffer {
 	switch val := val.(type) {
 	case string:
 		b.AppendString(val, quota)

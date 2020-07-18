@@ -1,6 +1,6 @@
 package log
 
-import "github.com/derkan/nlog/common"
+import "github.com/derkan/nlog"
 
 // StdLogger is standard logger instance
 var StdLogger Logger
@@ -15,7 +15,7 @@ func Flush() {
 }
 
 // Fatal returns FATAL level logger item
-func Fatal() common.LoggerItem {
+func Fatal() nlog.LoggerItem {
 	return StdLogger.Fatal()
 }
 
@@ -25,7 +25,7 @@ func Fatalf(msg string, v ...interface{}) {
 }
 
 // Error returns ERROR level logger item
-func Error() common.LoggerItem {
+func Error() nlog.LoggerItem {
 	return StdLogger.Error()
 }
 
@@ -35,7 +35,7 @@ func Errorf(msg string, v ...interface{}) {
 }
 
 // Warn returns WARNING level logger item
-func Warn() common.LoggerItem {
+func Warn() nlog.LoggerItem {
 	return StdLogger.Warn()
 }
 
@@ -45,7 +45,7 @@ func Warnf(msg string, v ...interface{}) {
 }
 
 // Info returns info level logger item
-func Info() common.LoggerItem {
+func Info() nlog.LoggerItem {
 	return StdLogger.Info()
 }
 
@@ -55,7 +55,7 @@ func Infof(msg string, v ...interface{}) {
 }
 
 // Debug returns DEBUG level logger item
-func Debug() common.LoggerItem {
+func Debug() nlog.LoggerItem {
 	return StdLogger.Debug()
 }
 
@@ -80,6 +80,6 @@ func Println(msg ...interface{}) {
 }
 
 // Sub returns a sub logger with given prefix and optionally min logging level
-func Sub(prefix string, minLevel ...common.Level) Logger {
+func Sub(prefix string, minLevel ...nlog.Level) Logger {
 	return StdLogger.Sub(prefix, minLevel...)
 }

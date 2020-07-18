@@ -4,11 +4,11 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 )
 
 // GetFileLoc appends file location to log line
-func GetFileLoc(pathStrip string, buff common.Buffer, callDepth int, quota bool) {
+func GetFileLoc(pathStrip string, buff nlog.Buffer, callDepth int, quota bool) {
 	var (
 		filePath string
 		lineNo   int

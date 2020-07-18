@@ -1,8 +1,6 @@
 package pool
 
-import (
-	"github.com/derkan/nlog/common"
-)
+import "github.com/derkan/nlog"
 
 var _itemPool ItemPool
 
@@ -10,10 +8,10 @@ var _itemPool ItemPool
 type Item struct {
 	callDepth  int
 	subDepth   int
-	formatters []common.Formatter
-	lvl        common.Level
+	formatters []nlog.Formatter
+	lvl        nlog.Level
 	pool       ItemPool
-	buffs      []common.Buffer
+	buffs      []nlog.Buffer
 	prefix     string
 }
 
@@ -41,13 +39,13 @@ func (item *Item) Msgf(format string, args ...interface{}) {
 }
 
 // Str adds a new str key value to buff
-func (item *Item) Str(key string, val string) common.LoggerItem {
+func (item *Item) Str(key string, val string) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -58,13 +56,13 @@ func (item *Item) Str(key string, val string) common.LoggerItem {
 }
 
 // Strs adds a slice of string value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) Strs(key string, val []string) common.LoggerItem {
+func (item *Item) Strs(key string, val []string) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -75,13 +73,13 @@ func (item *Item) Strs(key string, val []string) common.LoggerItem {
 }
 
 // Int adds a new int key value to buff, Msg/Msgf should be called in same chain
-func (item *Item) Int(key string, val int) common.LoggerItem {
+func (item *Item) Int(key string, val int) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -92,13 +90,13 @@ func (item *Item) Int(key string, val int) common.LoggerItem {
 }
 
 // Ints adds a slice of int value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) Ints(key string, val []int) common.LoggerItem {
+func (item *Item) Ints(key string, val []int) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -109,13 +107,13 @@ func (item *Item) Ints(key string, val []int) common.LoggerItem {
 }
 
 // Ints8 adds a slice of int8 value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) Ints8(key string, val []int8) common.LoggerItem {
+func (item *Item) Ints8(key string, val []int8) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -126,13 +124,13 @@ func (item *Item) Ints8(key string, val []int8) common.LoggerItem {
 }
 
 // Ints16 adds a slice of int16 value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) Ints16(key string, val []int16) common.LoggerItem {
+func (item *Item) Ints16(key string, val []int16) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -143,13 +141,13 @@ func (item *Item) Ints16(key string, val []int16) common.LoggerItem {
 }
 
 // Ints32 adds a slice of int32 value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) Ints32(key string, val []int32) common.LoggerItem {
+func (item *Item) Ints32(key string, val []int32) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -160,13 +158,13 @@ func (item *Item) Ints32(key string, val []int32) common.LoggerItem {
 }
 
 // Int64 adds a new int64 key value to buff, Msg/Msgf should be called in same chain
-func (item *Item) Int64(key string, val int64) common.LoggerItem {
+func (item *Item) Int64(key string, val int64) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -177,13 +175,13 @@ func (item *Item) Int64(key string, val int64) common.LoggerItem {
 }
 
 // Int64s adds a slice of int64 value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) Int64s(key string, val []int64) common.LoggerItem {
+func (item *Item) Int64s(key string, val []int64) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -194,13 +192,13 @@ func (item *Item) Int64s(key string, val []int64) common.LoggerItem {
 }
 
 // UInt adds a new uint key value to buff, Msg/Msgf should be called in same chain
-func (item *Item) UInt(key string, val uint) common.LoggerItem {
+func (item *Item) UInt(key string, val uint) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -211,13 +209,13 @@ func (item *Item) UInt(key string, val uint) common.LoggerItem {
 }
 
 // UInts adds a slice of uint value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) UInts(key string, val []uint) common.LoggerItem {
+func (item *Item) UInts(key string, val []uint) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -228,13 +226,13 @@ func (item *Item) UInts(key string, val []uint) common.LoggerItem {
 }
 
 // UInts16 adds a slice of uint16 value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) UInts16(key string, val []uint16) common.LoggerItem {
+func (item *Item) UInts16(key string, val []uint16) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -245,13 +243,13 @@ func (item *Item) UInts16(key string, val []uint16) common.LoggerItem {
 }
 
 // UInts32 adds a slice of uint32 value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) UInts32(key string, val []uint32) common.LoggerItem {
+func (item *Item) UInts32(key string, val []uint32) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -262,13 +260,13 @@ func (item *Item) UInts32(key string, val []uint32) common.LoggerItem {
 }
 
 // UInt64 adds a new uint64 key value to buff, Msg/Msgf should be called in same chain
-func (item *Item) UInt64(key string, val uint64) common.LoggerItem {
+func (item *Item) UInt64(key string, val uint64) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -279,13 +277,13 @@ func (item *Item) UInt64(key string, val uint64) common.LoggerItem {
 }
 
 // UInts64 adds a slice of uint64 value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) UInts64(key string, val []uint64) common.LoggerItem {
+func (item *Item) UInts64(key string, val []uint64) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -296,13 +294,13 @@ func (item *Item) UInts64(key string, val []uint64) common.LoggerItem {
 }
 
 // Float32 adds a new float32 key value to buff, Msg/Msgf should be called in same chain
-func (item *Item) Float32(key string, val float32) common.LoggerItem {
+func (item *Item) Float32(key string, val float32) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -313,13 +311,13 @@ func (item *Item) Float32(key string, val float32) common.LoggerItem {
 }
 
 // Floats32 adds a slice of float32 value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) Floats32(key string, val []float32) common.LoggerItem {
+func (item *Item) Floats32(key string, val []float32) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -330,13 +328,13 @@ func (item *Item) Floats32(key string, val []float32) common.LoggerItem {
 }
 
 // Float64 adds a new float64 key value to buff, Msg/Msgf should be called in same chain
-func (item *Item) Float64(key string, val float64) common.LoggerItem {
+func (item *Item) Float64(key string, val float64) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -347,13 +345,13 @@ func (item *Item) Float64(key string, val float64) common.LoggerItem {
 }
 
 // Floats64 adds a slice of float32 value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) Floats64(key string, val []float64) common.LoggerItem {
+func (item *Item) Floats64(key string, val []float64) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -364,13 +362,13 @@ func (item *Item) Floats64(key string, val []float64) common.LoggerItem {
 }
 
 // Bool adds a new bool key value to buff, Msg/Msgf should be called in same chain
-func (item *Item) Bool(key string, val bool) common.LoggerItem {
+func (item *Item) Bool(key string, val bool) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -381,13 +379,13 @@ func (item *Item) Bool(key string, val bool) common.LoggerItem {
 }
 
 // Bools adds a slice of bool value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) Bools(key string, val []bool) common.LoggerItem {
+func (item *Item) Bools(key string, val []bool) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -398,7 +396,7 @@ func (item *Item) Bools(key string, val []bool) common.LoggerItem {
 }
 
 // Error adds a new error key value to buff, Msg/Msgf should be called in same chain
-func (item *Item) Err(val error) common.LoggerItem {
+func (item *Item) Err(val error) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
@@ -407,7 +405,7 @@ func (item *Item) Err(val error) common.LoggerItem {
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -418,13 +416,13 @@ func (item *Item) Err(val error) common.LoggerItem {
 }
 
 // Bools adds a slice of error value with a key to buff, Msg/Msgf should be called in same chain
-func (item *Item) Errors(key string, val []error) common.LoggerItem {
+func (item *Item) Errors(key string, val []error) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {
@@ -435,13 +433,13 @@ func (item *Item) Errors(key string, val []error) common.LoggerItem {
 }
 
 // With adds a new str key value to buff
-func (item *Item) With(key string, val interface{}) common.LoggerItem {
+func (item *Item) With(key string, val interface{}) nlog.LoggerItem {
 	if len(item.formatters) == 0 {
 		return item
 	}
 	// Each formatter will get a buffer, alloc space for Buffer objects
 	if len(item.buffs) == 0 {
-		item.buffs = make([]common.Buffer, len(item.formatters))
+		item.buffs = make([]nlog.Buffer, len(item.formatters))
 	}
 
 	for i := range item.formatters {

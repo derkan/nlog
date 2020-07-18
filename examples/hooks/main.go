@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 	"github.com/derkan/nlog/formatter/json"
 	"github.com/derkan/nlog/log"
 )
@@ -12,13 +12,13 @@ import (
 // var json = jsoniter.ConfigCompatibleWithStandardLibrary
 func main() {
 	log.Init(
-		//log.WithMinLevel(common.INFO),
+		//log.WithMinLevel(nlog.INFO),
 		log.WithFormatter(
 			json.NewFormatter(
-				json.WithLevel(common.INFO),
+				json.WithLevel(nlog.INFO),
 				json.WithDate(),
 				json.WithTime(time.Millisecond),
-				json.WithHook(common.HookFunc(func(level common.Level, hSet common.HookBufferSet, msg string) {
+				json.WithHook(nlog.HookFunc(func(level nlog.Level, hSet nlog.HookBufferSet, msg string) {
 					hSet.With("filled_from_hook", true)
 				})),
 			),

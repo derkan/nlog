@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/derkan/nlog/common"
+	"github.com/derkan/nlog"
 	"github.com/derkan/nlog/formatter"
 	"github.com/derkan/nlog/loader"
 	"github.com/derkan/nlog/pool"
@@ -30,13 +30,13 @@ var (
 // Formatter logs with json format
 type Formatter struct {
 	cfg   *config
-	hooks []common.Hook
+	hooks []nlog.Hook
 }
 
 // NewFormatter returns a new instance of Formatter
 func NewFormatter(opts ...option) *Formatter {
 	c := &Formatter{
-		cfg: &config{Level: common.INFO, FileLocCallerDepth: 4}}
+		cfg: &config{Level: nlog.INFO, FileLocCallerDepth: 4}}
 	// Loop through each option and set
 	for _, opt := range opts {
 		opt(c.cfg)
@@ -122,21 +122,21 @@ func (cl *Formatter) Flush() {
 }
 
 // levelStr gets formatted level string
-func (cl *Formatter) levelStr(lvl common.Level) string {
-	if v, ok := common.LevelNames[lvl]; ok {
+func (cl *Formatter) levelStr(lvl nlog.Level) string {
+	if v, ok := nlog.LevelNames[lvl]; ok {
 		return v
 	}
 	return fmt.Sprintf("!%d", lvl)
 }
 
-func (cl *Formatter) hookSet(buff common.Buffer, lvl common.Level) common.HookFieldFn {
+func (cl *Formatter) hookSet(buff nlog.Buffer, lvl nlog.Level) nlog.HookFieldFn {
 	return func(key string, value interface{}) {
 		cl.AppendKV(buff, lvl, key, value)
 	}
 }
 
 // Logf logs current log line without with args format
-func (cl *Formatter) Logf(callDepth int, lvl common.Level, fields common.Buffer, lgName, layout string, args ...interface{}) {
+func (cl *Formatter) Logf(callDepth int, lvl nlog.Level, fields nlog.Buffer, lgName, layout string, args ...interface{}) {
 	if callDepth == 0 {
 		callDepth = cl.cfg.FileLocCallerDepth
 	}
@@ -170,17 +170,17 @@ func (cl *Formatter) Logf(callDepth int, lvl common.Level, fields common.Buffer,
 	}
 
 	// Let assigning new fields from hooks even if fields is nil
-	var hookBuff common.Buffer
+	var hookBuff nlog.Buffer
 	if len(cl.cfg.Hooks) > 0 {
-		var buffSet common.HookBufferSet
+		var buffSet nlog.HookBufferSet
 		if fields == nil {
 			hookBuff = pool.GetBuffer()
-			buffSet = common.HookBufferSet{
+			buffSet = nlog.HookBufferSet{
 				Buffer: hookBuff,
 				With:   cl.hookSet(hookBuff, lvl),
 			}
 		} else {
-			buffSet = common.HookBufferSet{
+			buffSet = nlog.HookBufferSet{
 				Buffer: fields,
 				With:   cl.hookSet(fields, lvl),
 			}
@@ -212,17 +212,17 @@ func (cl *Formatter) Logf(callDepth int, lvl common.Level, fields common.Buffer,
 }
 
 // AppendFieldKey appends key value to log
-func (cl *Formatter) AppendFieldKey(buf common.Buffer, key string) {
+func (cl *Formatter) AppendFieldKey(buf nlog.Buffer, key string) {
 	fmt.Fprintf(buf, "%q:", key)
 }
 
 // AppendFieldValue appends value to log
-func (cl *Formatter) AppendFieldValue(buf common.Buffer, val interface{}) {
+func (cl *Formatter) AppendFieldValue(buf nlog.Buffer, val interface{}) {
 	buf.AppendAny(val, true, cl.cfg.MarshallFn)
 }
 
 // AppendKV formats and appends key,value to buffer
-func (cl *Formatter) AppendKV(buff common.Buffer, lvl common.Level, key string, val interface{}) {
+func (cl *Formatter) AppendKV(buff nlog.Buffer, lvl nlog.Level, key string, val interface{}) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -232,7 +232,7 @@ func (cl *Formatter) AppendKV(buff common.Buffer, lvl common.Level, key string, 
 }
 
 // Str appends str value to buff with a format
-func (cl *Formatter) Str(buf common.Buffer, lvl common.Level, key, val string) {
+func (cl *Formatter) Str(buf nlog.Buffer, lvl nlog.Level, key, val string) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -242,7 +242,7 @@ func (cl *Formatter) Str(buf common.Buffer, lvl common.Level, key, val string) {
 }
 
 // Strs adds a slice of string value with a key to buff
-func (cl *Formatter) Strs(buf common.Buffer, lvl common.Level, key string, val []string) {
+func (cl *Formatter) Strs(buf nlog.Buffer, lvl nlog.Level, key string, val []string) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -252,7 +252,7 @@ func (cl *Formatter) Strs(buf common.Buffer, lvl common.Level, key string, val [
 }
 
 // Int adds a new int key value to buff
-func (cl *Formatter) Int(buf common.Buffer, lvl common.Level, key string, val int) {
+func (cl *Formatter) Int(buf nlog.Buffer, lvl nlog.Level, key string, val int) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -262,7 +262,7 @@ func (cl *Formatter) Int(buf common.Buffer, lvl common.Level, key string, val in
 }
 
 // Ints adds a slice of int value with a key to buff
-func (cl *Formatter) Ints(buf common.Buffer, lvl common.Level, key string, val []int) {
+func (cl *Formatter) Ints(buf nlog.Buffer, lvl nlog.Level, key string, val []int) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -272,7 +272,7 @@ func (cl *Formatter) Ints(buf common.Buffer, lvl common.Level, key string, val [
 }
 
 // Ints8 adds a slice of int8 value with a key to buff
-func (cl *Formatter) Ints8(buf common.Buffer, lvl common.Level, key string, val []int8) {
+func (cl *Formatter) Ints8(buf nlog.Buffer, lvl nlog.Level, key string, val []int8) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -282,7 +282,7 @@ func (cl *Formatter) Ints8(buf common.Buffer, lvl common.Level, key string, val 
 }
 
 // Ints16 adds a slice of int16 value with a key to buff
-func (cl *Formatter) Ints16(buf common.Buffer, lvl common.Level, key string, val []int16) {
+func (cl *Formatter) Ints16(buf nlog.Buffer, lvl nlog.Level, key string, val []int16) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -292,7 +292,7 @@ func (cl *Formatter) Ints16(buf common.Buffer, lvl common.Level, key string, val
 }
 
 // Ints32 adds a slice of int32 value with a key to buff
-func (cl *Formatter) Ints32(buf common.Buffer, lvl common.Level, key string, val []int32) {
+func (cl *Formatter) Ints32(buf nlog.Buffer, lvl nlog.Level, key string, val []int32) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -302,7 +302,7 @@ func (cl *Formatter) Ints32(buf common.Buffer, lvl common.Level, key string, val
 }
 
 // Int64 adds a new int64 key value to buff
-func (cl *Formatter) Int64(buf common.Buffer, lvl common.Level, key string, val int64) {
+func (cl *Formatter) Int64(buf nlog.Buffer, lvl nlog.Level, key string, val int64) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -312,7 +312,7 @@ func (cl *Formatter) Int64(buf common.Buffer, lvl common.Level, key string, val 
 }
 
 // Int64s adds a slice of int64 value with a key to buff
-func (cl *Formatter) Int64s(buf common.Buffer, lvl common.Level, key string, val []int64) {
+func (cl *Formatter) Int64s(buf nlog.Buffer, lvl nlog.Level, key string, val []int64) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -322,7 +322,7 @@ func (cl *Formatter) Int64s(buf common.Buffer, lvl common.Level, key string, val
 }
 
 // UInt adds a new uint key value to buff
-func (cl *Formatter) UInt(buf common.Buffer, lvl common.Level, key string, val uint) {
+func (cl *Formatter) UInt(buf nlog.Buffer, lvl nlog.Level, key string, val uint) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -332,7 +332,7 @@ func (cl *Formatter) UInt(buf common.Buffer, lvl common.Level, key string, val u
 }
 
 // UInts adds a slice of uint value with a key to buff
-func (cl *Formatter) UInts(buf common.Buffer, lvl common.Level, key string, val []uint) {
+func (cl *Formatter) UInts(buf nlog.Buffer, lvl nlog.Level, key string, val []uint) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -342,7 +342,7 @@ func (cl *Formatter) UInts(buf common.Buffer, lvl common.Level, key string, val 
 }
 
 // UInts16 adds a slice of uint16 value with a key to buff
-func (cl *Formatter) UInts16(buf common.Buffer, lvl common.Level, key string, val []uint16) {
+func (cl *Formatter) UInts16(buf nlog.Buffer, lvl nlog.Level, key string, val []uint16) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -352,7 +352,7 @@ func (cl *Formatter) UInts16(buf common.Buffer, lvl common.Level, key string, va
 }
 
 // UInts32 adds a slice of uint32 value with a key to buff
-func (cl *Formatter) UInts32(buf common.Buffer, lvl common.Level, key string, val []uint32) {
+func (cl *Formatter) UInts32(buf nlog.Buffer, lvl nlog.Level, key string, val []uint32) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -362,7 +362,7 @@ func (cl *Formatter) UInts32(buf common.Buffer, lvl common.Level, key string, va
 }
 
 // Uint64 adds a new uint64 key value to buff
-func (cl *Formatter) UInt64(buf common.Buffer, lvl common.Level, key string, val uint64) {
+func (cl *Formatter) UInt64(buf nlog.Buffer, lvl nlog.Level, key string, val uint64) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -372,7 +372,7 @@ func (cl *Formatter) UInt64(buf common.Buffer, lvl common.Level, key string, val
 }
 
 // UInts64 adds a slice of uint64 value with a key to buff
-func (cl *Formatter) UInts64(buf common.Buffer, lvl common.Level, key string, val []uint64) {
+func (cl *Formatter) UInts64(buf nlog.Buffer, lvl nlog.Level, key string, val []uint64) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -382,7 +382,7 @@ func (cl *Formatter) UInts64(buf common.Buffer, lvl common.Level, key string, va
 }
 
 // Float32 adds a new float32 key value to buff
-func (cl *Formatter) Float32(buf common.Buffer, lvl common.Level, key string, val float32) {
+func (cl *Formatter) Float32(buf nlog.Buffer, lvl nlog.Level, key string, val float32) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -392,7 +392,7 @@ func (cl *Formatter) Float32(buf common.Buffer, lvl common.Level, key string, va
 }
 
 // Floats32 adds a slice of float32 value with a key to buff
-func (cl *Formatter) Floats32(buf common.Buffer, lvl common.Level, key string, val []float32) {
+func (cl *Formatter) Floats32(buf nlog.Buffer, lvl nlog.Level, key string, val []float32) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -402,7 +402,7 @@ func (cl *Formatter) Floats32(buf common.Buffer, lvl common.Level, key string, v
 }
 
 // Float64 adds a new float64 key value to buff
-func (cl *Formatter) Float64(buf common.Buffer, lvl common.Level, key string, val float64) {
+func (cl *Formatter) Float64(buf nlog.Buffer, lvl nlog.Level, key string, val float64) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -412,7 +412,7 @@ func (cl *Formatter) Float64(buf common.Buffer, lvl common.Level, key string, va
 }
 
 // Floats64 adds a slice of float32 value with a key to buff
-func (cl *Formatter) Floats64(buf common.Buffer, lvl common.Level, key string, val []float64) {
+func (cl *Formatter) Floats64(buf nlog.Buffer, lvl nlog.Level, key string, val []float64) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -422,7 +422,7 @@ func (cl *Formatter) Floats64(buf common.Buffer, lvl common.Level, key string, v
 }
 
 // Bool adds a new bool key value to buff
-func (cl *Formatter) Bool(buf common.Buffer, lvl common.Level, key string, val bool) {
+func (cl *Formatter) Bool(buf nlog.Buffer, lvl nlog.Level, key string, val bool) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -432,7 +432,7 @@ func (cl *Formatter) Bool(buf common.Buffer, lvl common.Level, key string, val b
 }
 
 // Bools adds a slice of bool value with a key to buff
-func (cl *Formatter) Bools(buf common.Buffer, lvl common.Level, key string, val []bool) {
+func (cl *Formatter) Bools(buf nlog.Buffer, lvl nlog.Level, key string, val []bool) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -442,7 +442,7 @@ func (cl *Formatter) Bools(buf common.Buffer, lvl common.Level, key string, val 
 }
 
 // Error adds a new error key value to buff
-func (cl *Formatter) Error(buf common.Buffer, lvl common.Level, key string, val error) {
+func (cl *Formatter) Error(buf nlog.Buffer, lvl nlog.Level, key string, val error) {
 	if cl.cfg.Level < lvl {
 		return
 	}
@@ -452,7 +452,7 @@ func (cl *Formatter) Error(buf common.Buffer, lvl common.Level, key string, val 
 }
 
 // Bools adds a slice of error value with a key to buff
-func (cl *Formatter) Errors(buf common.Buffer, lvl common.Level, key string, val []error) {
+func (cl *Formatter) Errors(buf nlog.Buffer, lvl nlog.Level, key string, val []error) {
 	if cl.cfg.Level < lvl {
 		return
 	}

@@ -8,7 +8,7 @@ log:
   unix_time: false
   time_resolution: ns
   file_loc: true
-  file_loc_strip: /data/go/src
+  file_loc_strip: /data/go/src/
   file_loc_caller_depth: 4
   leveled: normal
   formatters:

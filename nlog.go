@@ -69,6 +69,8 @@ type Logger interface {
 	Println(args ...interface{})
 	// Sub returns a sub logger
 	Sub(prefix string) interface{}
+	// GetLevel returns logger level
+	GetLevel() int
 }
 
 // LoggerItem is logger context

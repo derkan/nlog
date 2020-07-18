@@ -208,3 +208,8 @@ func (ins *Instance) Sub(prefix string) interface{} {
 		},
 	}
 }
+
+// GetLevel returns logger level
+func (ins *Instance) GetLevel() int {
+	return int(ins.cfg.MinLevel)
+}

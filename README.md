@@ -1,4 +1,4 @@
-# nlog GO logging library
+# `nlog` logger
 
 `nlog` is a GoLang library for performant logging.
 

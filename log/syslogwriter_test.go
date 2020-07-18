@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/derkan/nlog"
 	"github.com/derkan/nlog/formatter/json"
 	"github.com/derkan/nlog/writer"
 )

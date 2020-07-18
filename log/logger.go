@@ -13,12 +13,12 @@ import (
 
 // Init initalizes default logger
 func Init(opts ...option) {
-	StdLogger = New(opts...)
+	Logger = New(opts...)
 }
 
 // InitFromLoader initalizes default logger
 func InitFromLoader(cfg *loader.Loader, appName string) {
-	StdLogger = NewFromConfig(cfg, appName)
+	Logger = NewFromConfig(cfg, appName)
 }
 
 // New returns a new instance of standard logger
@@ -197,7 +197,7 @@ func (ins *Instance) Println(args ...interface{}) {
 }
 
 // Sub returns a sub logger with given prefix and optionally min logging level
-func (ins *Instance) Sub(prefix string, minLevel ...nlog.Level) Logger {
+func (ins *Instance) Sub(prefix string, minLevel ...nlog.Level) nlog.Logger {
 	lvl := ins.cfg.MinLevel
 	if len(minLevel) > 0 {
 		lvl = minLevel[0]

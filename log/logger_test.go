@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/derkan/nlog"
 	"github.com/derkan/nlog/formatter/console"
 )
 
@@ -25,17 +26,12 @@ firefox /tmp/profile_mem.svg
 func BenchmarkInfof(b *testing.B) {
 	output := &BuffCloser{&bytes.Buffer{}}
 	log := New(
-		WithPrefix("main"),
 		WithMinLevel(nlog.DEBUG),
-		//log.WithFormatter(&log.JSONFormatter{}),
 		WithFormatter(
 			console.NewFormatter(
 				console.WithColor(),
 				console.WithDate(),
-				console.WithTime(),
-				//log.WithUnixTime(time.Microsecond),
-				console.WithFileLoc(),
-				console.WithStripPath("/data/go/src/swarmdb"),
+				console.WithTime(), //console.WithFileLoc(),
 				console.WithWriter(output, nlog.DEBUG),
 			),
 		),
@@ -53,17 +49,13 @@ func BenchmarkInfof(b *testing.B) {
 func BenchmarkStr(b *testing.B) {
 	output := &BuffCloser{&bytes.Buffer{}}
 	log := New(
-		WithPrefix("main"),
 		WithMinLevel(nlog.DEBUG),
 		//log.WithFormatter(&log.JSONFormatter{}),
 		WithFormatter(
 			console.NewFormatter(
 				console.WithColor(),
 				console.WithDate(),
-				console.WithTime(),
-				//log.WithUnixTime(time.Microsecond),
-				console.WithFileLoc(),
-				console.WithStripPath("/data/go/src/swarmdb"),
+				console.WithTime(), //console.WithFileLoc(),
 				console.WithWriter(output, nlog.DEBUG),
 			),
 		),
@@ -77,21 +69,16 @@ func BenchmarkStr(b *testing.B) {
 	}
 }
 
-// go test  -bench=Str -benchmem
+// go test  -bench=With -benchmem
 func BenchmarkWith(b *testing.B) {
 	output := &BuffCloser{&bytes.Buffer{}}
 	log := New(
-		WithPrefix("main"),
 		WithMinLevel(nlog.DEBUG),
-		//log.WithFormatter(&log.JSONFormatter{}),
 		WithFormatter(
 			console.NewFormatter(
 				console.WithColor(),
 				console.WithDate(),
-				console.WithTime(),
-				//log.WithUnixTime(time.Microsecond),
-				console.WithFileLoc(),
-				console.WithStripPath("/data/go/src/swarmdb"),
+				console.WithTime(), //console.WithFileLoc(),
 				console.WithWriter(output, nlog.DEBUG),
 			),
 		),

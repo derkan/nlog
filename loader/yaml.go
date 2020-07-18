@@ -207,15 +207,15 @@ func ConfigFile(filename string) *File {
 // Get retrieves a scalar from the file specified by a string of the same
 // format as that expected by Child.  If the final node is not a Scalar, Get
 // will return an error.
-func (f *File) Get(spec string, params ...interface{}) (string, error) {
+func (f *File) Get(def string, spec string, params ...interface{}) (string, error) {
 	spec = fmt.Sprintf(spec, params...)
 	node, err := Child(f.Root, spec)
 	if err != nil {
-		return "", err
+		return def, err
 	}
 
 	if node == nil {
-		return "", &NodeNotFound{
+		return def, &NodeNotFound{
 			Full: spec,
 			Spec: spec,
 		}
@@ -223,7 +223,7 @@ func (f *File) Get(spec string, params ...interface{}) (string, error) {
 
 	scalar, ok := node.(Scalar)
 	if !ok {
-		return "", &NodeTypeMismatch{
+		return def, &NodeTypeMismatch{
 			Full:     spec,
 			Spec:     spec,
 			Token:    "$",
@@ -234,46 +234,46 @@ func (f *File) Get(spec string, params ...interface{}) (string, error) {
 	return scalar.String(), nil
 }
 
-func (f *File) GetInt64(spec string, params ...interface{}) (int64, error) {
+func (f *File) GetInt64(def int64, spec string, params ...interface{}) (int64, error) {
 	spec = fmt.Sprintf(spec, params...)
-	s, err := f.Get(spec)
+	s, err := f.Get("", spec)
 	if err != nil {
-		return 0, err
+		return def, err
 	}
 
 	i, err := strconv.ParseInt(s, 10, 64)
-	if err != nil {
-		return 0, err
+	if err != nil || s == "" {
+		return def, err
 	}
 
 	return i, nil
 }
 
-func (f *File) GetInt(spec string, params ...interface{}) (int, error) {
+func (f *File) GetInt(def int, spec string, params ...interface{}) (int, error) {
 	spec = fmt.Sprintf(spec, params...)
-	s, err := f.Get(spec)
+	s, err := f.Get("", spec)
 	if err != nil {
-		return 0, err
+		return def, err
 	}
 
 	i, err := strconv.Atoi(s)
-	if err != nil {
-		return 0, err
+	if err != nil || s == "" {
+		return def, err
 	}
 
 	return i, nil
 }
 
-func (f *File) GetBool(spec string, params ...interface{}) (bool, error) {
+func (f *File) GetBool(def bool, spec string, params ...interface{}) (bool, error) {
 	spec = fmt.Sprintf(spec, params...)
-	s, err := f.Get(spec)
+	s, err := f.Get("", spec)
 	if err != nil {
-		return false, err
+		return def, err
 	}
 
 	b, err := strconv.ParseBool(s)
-	if err != nil {
-		return false, err
+	if err != nil || s == "" {
+		return def, err
 	}
 
 	return b, nil
@@ -314,7 +314,7 @@ func (f *File) Count(spec string, params ...interface{}) (int, error) {
 // will panic.  This is a convenience function for use in initializers.
 func (f *File) Require(spec string, params ...interface{}) string {
 	spec = fmt.Sprintf(spec, params...)
-	str, err := f.Get(spec)
+	str, err := f.Get("", spec)
 	if err != nil {
 		panic(err)
 	}

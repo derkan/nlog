@@ -158,8 +158,6 @@ func (cl *Formatter) levelStr(lvl nlog.Level) string {
 	switch lvl {
 	case nlog.DEBUG:
 		return cl.debugStr
-	case nlog.NOTICE:
-		return cl.noticeStr
 	case nlog.WARNING:
 		return cl.warnStr
 	case nlog.ERROR:

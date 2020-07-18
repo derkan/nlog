@@ -74,16 +74,13 @@ type Writer struct {
 	Level    nlog.Level
 }
 
-// Formatter holds common formatter configs
-type Formatter struct {
+type FormatterCommon struct {
 	// Type is type of formatter. Can be json or console
 	TypeStr string `json:"type" yaml:"type"`
 	Type    string
 	// Level is logging level
 	LevelStr string `json:"level" yaml:"level"`
 	Level    nlog.Level
-	// Colored determines whether to print in color only valid for console
-	Colored bool `json:"colored" yaml:"colored"`
 	// NoPrintLevel if set level string will not be written
 	NoPrintLevel bool `json:"no_print_level" yaml:"print_level"`
 	// Date sets whether to print date or not in layout 2006-01-02
@@ -107,17 +104,22 @@ type Formatter struct {
 	LeveledTypeStr string `json:"leveled" yaml:"leveled"`
 	// LeveledTypeStr defines how to call write method of writers. Can be one of normal or parallel
 	LeveledType string
+}
+
+// Formatter holds common formatter configs
+type Formatter struct {
+	FormatterCommon
+	// Colored determines whether to print in color only valid for console
+	Colored bool `json:"colored" yaml:"colored"`
 	// Writers holds leveled writer config
 	Writers []Writer `json:"writers" yaml:"writers"`
 }
 
 // Loader loads logging configs
 type Loader struct {
+	FormatterCommon // Embed formatter to set defaults for underlying formatters
 	// Prefix adds prefix for each line log
 	Prefix string `json:"prefix" yaml:"prefix"`
-	// MinLevel is minimal level of logging
-	MinLevelStr string `json:"min_level" yaml:"min_level"`
-	MinLevel    nlog.Level
 	// Formatters holds formatters
 	Formatters []Formatter `json:"console_formatters" yaml:"console_formatters"`
 }
@@ -186,50 +188,66 @@ func FromFile(filename string, baseKey string) (*Loader, error) {
 	}
 	return fromCfg(config, baseKey), nil
 }
+
 func fromCfg(config *File, baseKey string) *Loader {
 	if baseKey != "" {
 		baseKey += "."
 	}
 	l := new(Loader)
-	l.Prefix, _ = config.Get(baseKey + "prefix")
-	l.MinLevelStr, _ = config.Get(baseKey + "min_level")
-	l.MinLevel = AsLevel(l.MinLevelStr, nlog.INFO)
+	l.Prefix, _ = config.Get("", baseKey+"prefix")
+	l.TypeStr, _ = config.Get("", baseKey+"type")
+	l.Type = CleanType(FormatterTypes, l.TypeStr, "console")
+	l.LevelStr, _ = config.Get("stdout", baseKey+"level")
+	l.Level = AsLevel(l.LevelStr, nlog.DEBUG)
+	l.NoPrintLevel, _ = config.GetBool(true, baseKey+"no_print_level")
+	l.Date, _ = config.GetBool(true, baseKey+"date")
+	l.Time, _ = config.GetBool(true, baseKey+"time")
+	l.TimeUTC, _ = config.GetBool(false, baseKey+"time_utc")
+	l.UnixTime, _ = config.GetBool(false, baseKey+"unix_time")
+	l.TimeResolutionStr, _ = config.Get("s", baseKey+"time_resolution")
+	l.TimeResolution = AsDuration(l.TimeResolutionStr, time.Second)
+	l.FileLoc, _ = config.GetBool(false, baseKey+"file_loc")
+	l.FileLocStrip, _ = config.Get("", baseKey+"file_loc_strip")
+	l.FileLocCallerDepth, _ = config.GetInt(0, baseKey+"file_loc_caller_depth")
+	l.LeveledTypeStr, _ = config.Get("", baseKey+"leveled")
+	l.LeveledType = CleanType(LeveledTypes, l.LeveledTypeStr, "normal")
+
 	fmtCnt, _ := config.Count(baseKey + "formatters")
 	if fmtCnt > 0 {
 		l.Formatters = make([]Formatter, fmtCnt)
 		for i := 0; i < fmtCnt; i++ {
-			l.Formatters[i].TypeStr, _ = config.Get(baseKey+"formatters[%d].type", i)
-			l.Formatters[i].Type = CleanType(FormatterTypes, l.Formatters[i].TypeStr, "stdout")
-			l.Formatters[i].LevelStr, _ = config.Get(baseKey+"formatters[%d].level", i)
-			l.Formatters[i].Level = AsLevel(l.Formatters[i].LevelStr, l.MinLevel)
-			l.Formatters[i].NoPrintLevel, _ = config.GetBool(baseKey+"formatters[%d].no_print_level", i)
-			l.Formatters[i].Date, _ = config.GetBool(baseKey+"formatters[%d].date", i)
-			l.Formatters[i].Time, _ = config.GetBool(baseKey+"formatters[%d].time", i)
-			l.Formatters[i].TimeUTC, _ = config.GetBool(baseKey+"formatters[%d].time_utc", i)
-			l.Formatters[i].UnixTime, _ = config.GetBool(baseKey+"formatters[%d].unix_time", i)
-			l.Formatters[i].TimeResolutionStr, _ = config.Get(baseKey+"formatters[%d].time_resolution", i)
-			l.Formatters[i].TimeResolution = AsDuration(l.Formatters[i].TimeResolutionStr, time.Second)
-			l.Formatters[i].FileLoc, _ = config.GetBool(baseKey+"formatters[%d].file_loc", i)
-			l.Formatters[i].FileLocStrip, _ = config.Get(baseKey+"formatters[%d].file_loc_strip", i)
-			l.Formatters[i].FileLocCallerDepth, _ = config.GetInt(baseKey+"formatters[%d].file_loc_caller_depth", i)
-			l.Formatters[i].Colored, _ = config.GetBool(baseKey+"formatters[%d].colored", i)
-			l.Formatters[i].LeveledTypeStr, _ = config.Get(baseKey+"formatters[%d].leveled", i)
-			l.Formatters[i].LeveledType = CleanType(LeveledTypes, l.Formatters[i].LeveledTypeStr, "normal")
+			l.Formatters[i].TypeStr, _ = config.Get("", baseKey+"formatters[%d].type", i)
+			l.Formatters[i].Type = CleanType(FormatterTypes, l.Formatters[i].TypeStr, l.Type)
+			l.Formatters[i].LevelStr, _ = config.Get("", baseKey+"formatters[%d].level", i)
+			l.Formatters[i].Level = AsLevel(l.Formatters[i].LevelStr, l.Level)
+			l.Formatters[i].NoPrintLevel, _ = config.GetBool(l.NoPrintLevel, baseKey+"formatters[%d].no_print_level", i)
+			l.Formatters[i].Date, _ = config.GetBool(l.Date, baseKey+"formatters[%d].date", i)
+			l.Formatters[i].Time, _ = config.GetBool(l.Time, baseKey+"formatters[%d].time", i)
+			l.Formatters[i].TimeUTC, _ = config.GetBool(l.TimeUTC, baseKey+"formatters[%d].time_utc", i)
+			l.Formatters[i].UnixTime, _ = config.GetBool(l.UnixTime, baseKey+"formatters[%d].unix_time", i)
+			l.Formatters[i].TimeResolutionStr, _ = config.Get("", baseKey+"formatters[%d].time_resolution", i)
+			l.Formatters[i].TimeResolution = AsDuration(l.Formatters[i].TimeResolutionStr, l.TimeResolution)
+			l.Formatters[i].FileLoc, _ = config.GetBool(l.FileLoc, baseKey+"formatters[%d].file_loc", i)
+			l.Formatters[i].FileLocStrip, _ = config.Get(l.FileLocStrip, baseKey+"formatters[%d].file_loc_strip", i)
+			l.Formatters[i].FileLocCallerDepth, _ = config.GetInt(l.FileLocCallerDepth, baseKey+"formatters[%d].file_loc_caller_depth", i)
+			l.Formatters[i].Colored, _ = config.GetBool(false, baseKey+"formatters[%d].colored", i)
+			l.Formatters[i].LeveledTypeStr, _ = config.Get("", baseKey+"formatters[%d].leveled", i)
+			l.Formatters[i].LeveledType = CleanType(LeveledTypes, l.Formatters[i].LeveledTypeStr, l.LeveledType)
 			writerCnt, _ := config.Count(baseKey+"formatters[%d].writers", i)
 			if writerCnt > 0 {
 				l.Formatters[i].Writers = make([]Writer, writerCnt)
 				for j := 0; j < writerCnt; j++ {
-					l.Formatters[i].Writers[j].TypeStr, _ = config.Get(baseKey+"formatters[%d].writers[%d].type", i, j)
+					l.Formatters[i].Writers[j].TypeStr, _ = config.Get("", baseKey+"formatters[%d].writers[%d].type", i, j)
 					l.Formatters[i].Writers[j].Type = CleanType(WriterTypes, l.Formatters[i].Writers[j].TypeStr, "stdout")
-					l.Formatters[i].Writers[j].LevelStr, _ = config.Get(baseKey+"formatters[%d].writers[%d].level", i, j)
+					l.Formatters[i].Writers[j].LevelStr, _ = config.Get("", baseKey+"formatters[%d].writers[%d].level", i, j)
 					l.Formatters[i].Writers[j].Level = AsLevel(l.Formatters[i].Writers[j].LevelStr, l.Formatters[i].Level)
-					l.Formatters[i].Writers[j].Filename, _ = config.Get(baseKey+"formatters[%d].writers[%d].filename", i, j)
-					l.Formatters[i].Writers[j].MaxSize, _ = config.GetInt(baseKey+"formatters[%d].writers[%d].max_size", i, j)
-					l.Formatters[i].Writers[j].MaxAge, _ = config.GetInt(baseKey+"formatters[%d].writers[%d].max_age", i, j)
-					l.Formatters[i].Writers[j].MaxBackups, _ = config.GetInt(baseKey+"formatters[%d].writers[%d].max_backups", i, j)
-					l.Formatters[i].Writers[j].UTC, _ = config.GetBool(baseKey+"formatters[%d].writers[%d].utc", i, j)
-					l.Formatters[i].Writers[j].Compress, _ = config.GetBool(baseKey+"formatters[%d].writers[%d].compress", i, j)
-					l.Formatters[i].Writers[j].QueueLen, _ = config.GetInt(baseKey+"formatters[%d].writers[%d].queue_len", i, j)
+					l.Formatters[i].Writers[j].Filename, _ = config.Get("", baseKey+"formatters[%d].writers[%d].filename", i, j)
+					l.Formatters[i].Writers[j].MaxSize, _ = config.GetInt(100, baseKey+"formatters[%d].writers[%d].max_size", i, j)
+					l.Formatters[i].Writers[j].MaxAge, _ = config.GetInt(0, baseKey+"formatters[%d].writers[%d].max_age", i, j)
+					l.Formatters[i].Writers[j].MaxBackups, _ = config.GetInt(0, baseKey+"formatters[%d].writers[%d].max_backups", i, j)
+					l.Formatters[i].Writers[j].UTC, _ = config.GetBool(l.Formatters[i].TimeUTC, baseKey+"formatters[%d].writers[%d].utc", i, j)
+					l.Formatters[i].Writers[j].Compress, _ = config.GetBool(true, baseKey+"formatters[%d].writers[%d].compress", i, j)
+					l.Formatters[i].Writers[j].QueueLen, _ = config.GetInt(1000, baseKey+"formatters[%d].writers[%d].queue_len", i, j)
 				}
 			}
 		}

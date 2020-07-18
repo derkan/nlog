@@ -83,7 +83,6 @@ var LevelColors = map[nlog.Level]string{
 	nlog.FATAL:   FatalColor,
 	nlog.ERROR:   ErrorColor,
 	nlog.WARNING: WarnColor,
-	nlog.NOTICE:  NoticeColor,
 	nlog.INFO:    InfoColor,
 	nlog.DEBUG:   DebugColor,
 }

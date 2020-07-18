@@ -1,0 +1,36 @@
+log:
+  prefix:
+  level: DEBUG
+  no_print_level: false
+  date: true
+  time: true
+  time_utc: false
+  unix_time: false
+  time_resolution: ns
+  file_loc: true
+  file_loc_strip: /data/go/src
+  file_loc_caller_depth: 4
+  leveled: normal  
+  formatters:
+    - type: console
+      colored: true      
+      writers:
+        - type: stdout
+          level: DEBUG
+        - type: stderr
+          level: ERROR
+    - type: json
+      time_utc: true
+      leveled: parallel
+      writers:
+        - type: syslog
+          level: DEBUG
+        - type: filerotator
+          level: DEBUG
+          filename: /tmp/test.log
+          max_size: 100
+          max_age: 10
+          max_backups: 11
+          utc: false
+          compress: true
+          queue_len: 1000

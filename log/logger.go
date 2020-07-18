@@ -36,7 +36,7 @@ func New(opts ...option) *Instance {
 func NewFromConfig(cfg *loader.Loader, appName string) (ins *Instance) {
 	ins = &Instance{
 		cfg: &config{
-			MinLevel: cfg.MinLevel,
+			MinLevel: cfg.Level,
 			Prefix:   cfg.Prefix,
 		},
 	}

@@ -12,7 +12,6 @@ const (
 	FATAL Level = iota
 	ERROR
 	WARNING
-	NOTICE
 	INFO
 	DEBUG
 )
@@ -72,9 +71,6 @@ type Logger interface {
 	Sub(prefix string, minLevel ...Level) Logger
 }
 
-// MarshallFn is func stub used for custom marshalling
-type MarshallFn func(interface{}) ([]byte, error)
-
 // LoggerItem is logger context
 type LoggerItem interface {
 	// Msg logs info message with format if logging level is satisfied
@@ -130,6 +126,9 @@ type LoggerItem interface {
 	// With adds a new str key value to buff, Msg/Msgf should be called in same chain
 	With(key string, val interface{}) LoggerItem
 }
+
+// MarshallFn is func stub used for custom marshalling
+type MarshallFn func(interface{}) ([]byte, error)
 
 // Buffer provides byte buffer, which can be used for minimizing
 // memory allocations.

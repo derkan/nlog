@@ -16,18 +16,17 @@
 - Structured logging
   - Logs with levels
 - Minimal memory allocs
-- No dependencies.
-- But you can bring your own json encoder for serializing objects and define any per a formatter
+- No dependencies
+- `Hook` support
+- But you can bring your own `json encoder` for serializing objects and define it for a formatter
 - No reflection for high performance
-- Includes file rotater log writer with compress support
+- Includes `file rotater` log writer with compress support
 - Has a loader from `yaml` formatted config file
 - Sub logger support
 
 ## Logging concept
 
 ![Logging concept](concept.png)
-
-
 
 - Writer is after formatter, so for `nlog` will not build format message for each writer. It will build format only once and use it in all writers assigned to it.
 - You can assign logging level for your formatter. If user log level is too detail, formatter will not format message and will not log it.
@@ -96,9 +95,15 @@ Formatters are used to format log message according to your needs.
 
 ### Console Formatter
 
-Console formatter is used to print plain logs to given `io.Writer`.
+Console formatter is used to print plain logs to given `io.WriteCloser`.
 
 | Option       | Default     | Description                       |
 | ------------ | ----------- | --------------------------------- |
 | `WithColor`  | `false`     | When enabled, prints colored logs |
 | `WithWriter` | `os.Stdout` | Where to log messages             |
+
+## TODO
+
+- Documentation
+- Tests
+- Bechmarks

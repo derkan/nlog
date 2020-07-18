@@ -10,10 +10,10 @@ log:
   file_loc: true
   file_loc_strip: /data/go/src
   file_loc_caller_depth: 4
-  leveled: normal  
+  leveled: normal
   formatters:
     - type: console
-      colored: true      
+      colored: true
       writers:
         - type: stdout
           level: DEBUG

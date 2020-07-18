@@ -199,7 +199,7 @@ func fromCfg(config *File, baseKey string) *Loader {
 	l.Type = CleanType(FormatterTypes, l.TypeStr, "console")
 	l.LevelStr, _ = config.Get("stdout", baseKey+"level")
 	l.Level = AsLevel(l.LevelStr, nlog.DEBUG)
-	l.NoPrintLevel, _ = config.GetBool(true, baseKey+"no_print_level")
+	l.NoPrintLevel, _ = config.GetBool(false, baseKey+"no_print_level")
 	l.Date, _ = config.GetBool(true, baseKey+"date")
 	l.Time, _ = config.GetBool(true, baseKey+"time")
 	l.TimeUTC, _ = config.GetBool(false, baseKey+"time_utc")

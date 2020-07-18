@@ -32,6 +32,19 @@
 - You can assign logging level for your formatter. If user log level is too detail, formatter will not format message and will not log it.
 - `nlog` Internally uses buffer pool for low allocation.
 
+## Bechkmarks
+
+Some benchmark data
+
+```bash
+goos: linux
+goarch: amd64
+pkg: github.com/derkan/nlog/log
+BenchmarkInfof-4         2206740               538 ns/op             123 B/op          1 allocs/op
+BenchmarkStr-4           1505314               803 ns/op             216 B/op          1 allocs/op
+BenchmarkWith-4          1453686               798 ns/op             223 B/op          1 allocs/op
+```
+
 ## Quick start
 
 ```go

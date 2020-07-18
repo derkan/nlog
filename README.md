@@ -26,7 +26,7 @@
 
 ## Logging concept
 
-![Logging concept](concept.png)
+![Logging concept](assets/concept.png)
 
 - Writer is after formatter, so for `nlog` will not build format message for each writer. It will build format only once and use it in all writers assigned to it.
 - You can assign logging level for your formatter. If user log level is too detail, formatter will not format message and will not log it.
@@ -81,7 +81,7 @@ func main() {
 
 You'll get colored output:
 
-![Colored Log](colored.png)
+![Colored Log](assets/colored.png)
 
 ## Installation
 

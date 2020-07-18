@@ -67,8 +67,8 @@ type Logger interface {
 	Printf(format string, args ...interface{})
 	// Print prints log at INFO level with given params
 	Println(args ...interface{})
-	// Sub returns a sub logger with given prefix and optionally min logging level
-	Sub(prefix string, minLevel ...Level) Logger
+	// Sub returns a sub logger
+	Sub(prefix string) Logger
 }
 
 // LoggerItem is logger context

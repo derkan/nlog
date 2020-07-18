@@ -79,7 +79,7 @@ func Println(msg ...interface{}) {
 	Logger.Print(msg...)
 }
 
-// Sub returns a sub logger with given prefix and optionally min logging level
-func Sub(prefix string, minLevel ...nlog.Level) nlog.Logger {
-	return Logger.Sub(prefix, minLevel...)
+// Sub returns a sub logger
+func Sub(prefix string) nlog.Logger {
+	return Logger.Sub(prefix)
 }

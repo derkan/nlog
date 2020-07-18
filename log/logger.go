@@ -196,17 +196,13 @@ func (ins *Instance) Println(args ...interface{}) {
 	}
 }
 
-// Sub returns a sub logger with given prefix and optionally min logging level
-func (ins *Instance) Sub(prefix string, minLevel ...nlog.Level) nlog.Logger {
-	lvl := ins.cfg.MinLevel
-	if len(minLevel) > 0 {
-		lvl = minLevel[0]
-	}
+// Sub returns a sub logger with given prefix
+func (ins *Instance) Sub(prefix string) nlog.Logger {
 	return &Instance{
 		itemPool: ins.itemPool,
 		cfg: &config{
 			Prefix:     prefix,
-			MinLevel:   lvl,
+			MinLevel:   ins.cfg.MinLevel,
 			formatters: ins.cfg.formatters,
 			SubDepth:   1,
 		},

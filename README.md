@@ -25,7 +25,7 @@
 
 ## Logging concept
 
-![Colored Log](concept.png)
+![Logging concept](concept.png)
 
 
 
